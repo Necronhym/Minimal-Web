@@ -40,12 +40,19 @@ int main(int argc, char** argv)
 							}
 					}
 				memset(recvLine, 0, MAX_LINE);
-				snprintf((char*)buff, sizeof(buff),
-					       	"HTTP/1.0 200 OK\r\n\r\n <html> <h1>Hello Web</h1> </html>");
+				//Confirm request	
+				snprintf((char*)buff, sizeof(buff), "HTTP/1.0 200 OK\r\n\r\n");
 				write(connfd, (char*)buff, strlen((char*)buff));
+				memset(buff, 0, MAX_LINE);
+				//read index and write:
+				FILE *fptr = fopen("index.html", "r");
+				while(fgets(buff, MAX_LINE, fptr) != NULL)
+					{
+						write(connfd, (char*)buff, strlen((char*)buff));
+						memset(buff, 0, MAX_LINE);
+					}
+				memset(buff, 0, MAX_LINE);
 				close(connfd);
 			}
-
-
 		return 0;
 	}
